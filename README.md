@@ -1,4 +1,4 @@
-meta_cobecore
+INEACannot
 =======
 
 A programmatic shiny interface to annotate meta-data from digitized data records in R.
@@ -10,8 +10,8 @@ To install the development releases of the package run the following commands:
 
 ``` r
 if(!require(devtools)){install.package("devtools")}
-devtools::install_github("khufkens/meta_cobecore")
-library("meta_cobecore")
+devtools::install_github("khufkens/ineacannot")
+library("ineacannot")
 ```
 
 Use
@@ -20,8 +20,14 @@ Use
 To start the shiny web interface use the following command, where the path variable points to the location of the images you want to annotate. The meta-data you provide is incrementally added to a file called **meta_data.csv saved at the same location**.
 
 ``` r
-meta_cobecore(path = "/the/location/of/your/images/")
+ineacannot(path = "/the/location/of/your/images/")
 ```
+
+An interface will start in your default browser. Fill in the open fields, and flag all data types available and click the **submit** button. In case you are not sure or want to review a previous result click the **back** button. After reviewing the data clicking on the submit button will skip to the next record.
+
+![](./docs/annotate.png)
+
+Summary statistics and annotations progress is provided in the summary statistics tab.
 
 Acknowledgements
 ----------------
