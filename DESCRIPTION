@@ -1,0 +1,22 @@
+Package: ineacannot
+Title: Meta-data annotation interface for the COBECORE project
+Version: 1.0.0
+Authors@R: person("Hufkens","Koen",
+		  email="koen.hufkens@gmail.com",
+		  role=c("aut", "cre"))
+Description: Meta-data annotation interface for the COBECORE project.
+Depends:
+    R (>= 3.4.0)
+Imports:
+    shiny,
+    shinydashboard
+License: AGPL-3
+LazyData: true
+ByteCompile: true
+RoxygenNote: 6.1.0
+Suggests:
+    knitr,
+    rmarkdown,
+    covr,
+    testthat
+VignetteBuilder: knitr
