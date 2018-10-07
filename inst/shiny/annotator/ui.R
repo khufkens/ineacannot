@@ -3,9 +3,16 @@ require(shinydashboard)
 
 # Define UI ----
 ui <- dashboardPage(
-  dashboardHeader(title = "INEACannot"),
+  dashboardHeader(title = "INEACannot",
+                  dropdownMenu(type = "tasks", badgeStatus = "success",
+                               taskItem(value = 0, color = "red",
+                                        "Annotation Progress"
+                               )
+                  )
+                  ),
   dashboardSidebar(disable = TRUE),
   dashboardBody(
+    singleton(tags$head(tags$script(src = "message-handler.js"))),
     tabBox(width = "100%",
     tabPanel("Annotate",
                           fluidRow(
@@ -71,14 +78,14 @@ ui <- dashboardPage(
                           ),
                           
                           fluidRow(
-                            
-                            column(1,
-                                   actionButton("back","Back")),
-                            
-                            column(1,
+                            column(2,
+                                   actionButton("copy","Copy Previous"),
                                    actionButton("submit", "Submit"))
-                            
-                          )
+                          ),
+                         tags$hr(style="border-color: black;"),
+                          fluidRow(
+                             column(1,
+                                    actionButton("back","Back")))
                  ),
                  tabPanel("Summary Statistics",
                           

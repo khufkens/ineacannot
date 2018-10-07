@@ -23,7 +23,9 @@ To start the shiny web interface use the following command, where the path varia
 ineacannot(path = "/the/location/of/your/images/")
 ```
 
-An interface will start in your default browser. Fill in the open fields, and flag all data types available and click the **submit** button. In case you are not sure or want to review a previous result click the **back** button. After reviewing the data clicking on the submit button will skip to the next record.
+An interface will start in your default browser. Fill in the open fields, and flag all data types available and click the **submit** button. In case you are not sure or want to review a previous result click the **back** button. After reviewing the data clicking on the submit button will skip to the next record. 
+
+For sequential climate data records there is a **copy previous** button which copies previous marked values and increments the month value. When the end of a year is reached, the year value will increment and the month value is set to January. This should speed up annotation of long sequential data records without minimal interaction.
 
 ![](./docs/annotate.png)
 

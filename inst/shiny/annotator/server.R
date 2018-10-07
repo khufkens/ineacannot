@@ -144,6 +144,85 @@ server <- function(input, output, session) {
     db(data)
   }
   
+  copy_previous <- function(){
+    observe({
+      
+      # grab dynamic data
+      data <- db()
+      
+      # grab current row number
+      row_number <- row_location() - 1
+      
+      # increment months and years based upon
+      # previous values
+      
+      # find flagged month
+      month_loc <- which(month.name == data$month[row_number])
+      
+      # set default year
+      year <- data$year[row_number]
+      
+      # if month_loc is empty set to NA
+      if (length(month_loc)==0){
+        month <- NA
+      } else if (month_loc >= 12){
+        year <- as.numeric(data$year[row_number]) + 1
+        month <- month.name[1]
+      } else {
+        month <- month.name[month_loc + 1]
+      }
+      
+      updateTextInput(session, "month",
+                      value = month)
+      updateTextInput(session, "year",
+                      value = year)
+      
+      # retain all static parameters
+      updateTextInput(session, "station",
+                      value = data$station[row_number])
+      updateTextInput(session, "number",
+                      value = data$number[row_number])
+      updateTextInput(session, "lat",
+                      value = data$lat[row_number])
+      updateTextInput(session, "lon",
+                      value = data$lon[row_number])
+      updateTextInput(session, "t_min",
+                      value = data$t_min[row_number])
+      updateTextInput(session, "t_max",
+                      value = data$t_max[row_number])
+      updateTextInput(session, "precip",
+                      value = data$precip[row_number])
+      updateTextInput(session, "precip_intensity",
+                      value = data$precip_intensity[row_number])
+      updateTextInput(session, "psy_temp_dry",
+                      value = data$psy_temp_dry[row_number])
+      updateTextInput(session, "psy_temp_humid",
+                      value = data$psy_temp_humid[row_number])
+      updateTextInput(session, "relative_humidity",
+                      value = data$relative_humidity[row_number])
+      updateTextInput(session, "evapometre_de_piche",
+                      value = data$evapometre_de_piche[row_number])
+      updateTextInput(session, "temp_du_bar",
+                      value = data$temp_du_bar[row_number])
+      updateTextInput(session, "haut_bar_luc",
+                      value = data$haut_bar_luc[row_number])
+      updateTextInput(session, "t1",
+                      value = data$t1[row_number])
+      updateTextInput(session, "t2",
+                      value = data$t2[row_number])
+      updateTextInput(session, "t3",
+                      value = data$t3[row_number])
+      updateTextInput(session, "actino",
+                      value = data$actino[row_number])
+      updateTextInput(session, "hygro",
+                      value = data$hygro[row_number])
+      updateTextInput(session, "cloud_type",
+                      value = data$cloud_type[row_number])
+      updateTextInput(session, "nebulosity",
+                      value = data$nebulosity[row_number])
+    })
+  }
+  
   # load path
   path <- get("path", envir = .GlobalEnv)
   
@@ -218,21 +297,21 @@ server <- function(input, output, session) {
     ifelse(all(is.na(x[3:24])), FALSE, TRUE)
   })
   
-  if(all(data$status == TRUE)){
-    message("All data is processed, exiting the annotation interface.")
-    stopApp()
-  }
-  
   # create reactive data store
   db <- reactiveVal()
+  row_location <- reactiveVal()
   
   # fill reactive database on startup
   db(data)
   
   # locate first unprocessed image, set this as the
   # starting row location
-  row_location <- reactiveVal()
-  row_location(which(data$status == 0)[1])
+  if(all(data$status == TRUE)){
+    message('No records left to process - showing the last records !')
+    row_location(nrow(data))
+  } else {
+    row_location(which(data$status == FALSE)[1])
+  }
   
   # load first image
   populate_fields(row_location())
@@ -245,7 +324,13 @@ server <- function(input, output, session) {
     
     # increment row location
     old_value = row_location()
-    row_location(old_value + 1)
+    new_value = old_value + 1
+    
+    if (new_value > nrow(db())){
+      message('No records left to process - showing the last records !')
+    } else {
+      row_location(old_value + 1)
+    }
     
     # populate fields and display image
     populate_fields(row_location())
@@ -254,7 +339,17 @@ server <- function(input, output, session) {
   # watch the back button
   observeEvent(input$back, {
     old_value = row_location()
-    row_location(old_value - 1)
+    new_value = old_value - 1
+    if (new_value <= 0){
+      row_location(old_value)
+    } else {
+      row_location(new_value)
+    }
     populate_fields(row_location())
+  })
+  
+  # watch the copy button
+  observeEvent(input$copy, {
+    copy_previous()
   })
 }
