@@ -5,15 +5,15 @@ server <- function(input, output, session) {
   # populate UI fields using a row number (assuming the data is loaded)
   populate_fields <- function(row_number){
     output$location <- renderText({ 
-      data$location[row_number]
+      data$top_dir[row_number]
     })
     
     output$filename <- renderText({ 
-      basename(data$files[row_number])
+      basename(data$image_path[row_number])
     })
     
     output$myImage <- renderImage({
-      list(src = as.character(data$files[row_number]),
+      list(src = as.character(data$image_path[row_number]),
            width = "100%")
     }, deleteFile = FALSE)
     
@@ -233,9 +233,8 @@ server <- function(input, output, session) {
   if(!file.exists(file.path(path, "meta_data.csv"))){
     
     # list all png files
-    files <- normalizePath(list.files(path,"*.jpg",
-                        full.names = TRUE,
-                        recursive = TRUE), winslash = "/")
+    files <- list.files(path,"*.jpg|*.png",
+                        recursive = TRUE)
     
     # check if there are files to process, if not exit app
     # else assign to data frame
@@ -245,9 +244,11 @@ server <- function(input, output, session) {
     } else {
       data <- as.data.frame(files, stringsAsFactors = FALSE)
     }
-    
+  
     # create base path field
-    data$location <- top_dir(data$files)
+    data$path <- path
+    data$top_dir <- top_dir(data$files)
+    data$image_path <- file.path(path, files)
     
     # general parameters
     data$station <- NA

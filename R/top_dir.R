@@ -7,9 +7,5 @@
 #' @export
 
 top_dir <- function(files){
-  files <- normalizePath(files,
-                         winslash = "/")
-  file_parts <- strsplit(files, "/")
-  location <- length(unlist(file_parts[1])) - 1
-  unlist(lapply(file_parts, "[[", location))
+  unlist(lapply(strsplit(files, "/"), "[[", 1))
 }
