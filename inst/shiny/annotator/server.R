@@ -295,7 +295,7 @@ server <- function(input, output, session) {
   
   # find the first empty slot
   data$status <- apply(data,1,function(x){
-    ifelse(all(is.na(x[3:24])), FALSE, TRUE)
+    ifelse(all(is.na(x[5:length(x)])), FALSE, TRUE)
   })
   
   # create reactive data store
